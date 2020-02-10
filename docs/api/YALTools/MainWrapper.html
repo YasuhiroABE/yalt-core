@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class YALTools::MainWrapper - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#class-YALTools::MainWrapper-label-Usage">Usage</a>
+    <li><a href="#class-YALTools::MainWrapper-label-Configuration+File+Format">Configuration File Format</a>
+    <li><a href="#class-YALTools::MainWrapper-label-Requirements+for+encryption-2Fdecryption+support.">Requirements for encryption/decryption support.</a>
+    <li><a href="#class-YALTools::MainWrapper-label-Examples">Examples</a>
+    <li><a href="#class-YALTools::MainWrapper-label-Case+1.+Connect+directly+to+CouchDB.">Case 1. Connect directly to CouchDB.</a>
+    <li><a href="#class-YALTools::MainWrapper-label-Case+2.+Connect+directly+to+CouchDB-2C+but+password+is+encrypted.">Case 2. Connect directly to CouchDB, but password is encrypted.</a>
+    <li><a href="#class-YALTools::MainWrapper-label-Case+3.+Connect+to+CouchDB+via+Apache+working+as+a+ssl+web+proxy.">Case 3. Connect to CouchDB via Apache working as a ssl web proxy.</a>
+    <li><a href="#class-YALTools::MainWrapper-label-Case+4.+Connect+to+CouchDB+via+stunnel.">Case 4. Connect to CouchDB via stunnel.</a>
+    <li><a href="#class-YALTools::MainWrapper-label-Exceptions">Exceptions</a>
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-getCouch">#getCouch</a>
+    
+    <li ><a href="#method-i-set_master_pwfile">#set_master_pwfile</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-YALTools::MainWrapper">
+  <h1 id="class-YALTools::MainWrapper" class="class">
+    class YALTools::MainWrapper
+  </h1>
+
+  <section class="description">
+    
+<p><a href="MainWrapper.html">YALTools::MainWrapper</a> is a class which has a
+responsibility to control  information about the authentication.</p>
+
+<p>The YALTools::MainWrapper::getCouch method returns  an instance of <a
+href="Main.html">YALTools::Main</a>.</p>
+
+<p>The <code>conf_file</code> can hold multiple authentication entries. The
+<code>label</code> specifies the entry which will be used for
+authentication.</p>
+
+<h2 id="class-YALTools::MainWrapper-label-Usage">Usage<span><a href="#class-YALTools::MainWrapper-label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<pre class="ruby"><span class="ruby-identifier">wrapper</span> = <span class="ruby-constant">YALTools</span><span class="ruby-operator">::</span><span class="ruby-constant">MainWrapper</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;config.yaml&quot;</span>, <span class="ruby-string">&quot;default.user&quot;</span>)
+<span class="ruby-identifier">wrapper</span>.<span class="ruby-identifier">set_masster_pwfile</span>(<span class="ruby-string">&quot;master_pw.json&quot;</span>)
+<span class="ruby-ivar">@couch</span> = <span class="ruby-identifier">wrapper</span>.<span class="ruby-identifier">getCouch</span>
+<span class="ruby-identifier">h</span> = <span class="ruby-ivar">@couch</span>.<span class="ruby-identifier">get</span>(<span class="ruby-string">&quot;/example/_all_docs&quot;</span>)
+</pre>
+
+<h3 id="class-YALTools::MainWrapper-label-Configuration+File+Format">Configuration File Format<span><a href="#class-YALTools::MainWrapper-label-Configuration+File+Format">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>These are standard form of the yaml conf file.</p>
+<dl class="rdoc-list label-list"><dt>For basic/digest authentication
+<dd>
+<p>The net-http-digest_auth library is required for the digest auth.</p>
+
+<pre>label:
+  host:
+  port:
+  user:
+  password:
+  password_salt:       ## option for encrypted password.
+  password_pass_file:  ## option.
+  digest_auth:         ## option for digest_auth.
+  cacert:              ## option for ssl.</pre>
+</dd><dt>for ssl_client authentication
+<dd>
+<p>Stunnel or other deligation server is required for the ssl client auth.</p>
+
+<pre>label:
+  host:
+  port:
+  user:
+  password:
+  cacert:
+  ssl_client_cert_file:
+  password_salt:        ## option.
+  password_pass_file:   ## option.
+  ssl_client_key_file:
+  ssl_client_key_file_pass:       ## option for the encrypted ssl_client_key_file.
+  ssl_client_key_file_pass_salt:  ## option.
+  ssl_client_key_file_pass_file:  ## option.
+  ssl_verify_depth:     ## option.
+  ssl_verify_mode:      ## option. one of &quot;OpenSSL::SSL::VERIFY_NONE&quot;,
+                        ##                &quot;OpenSSL::SSL::VERIFY_PEER&quot;,
+                        ##                &quot;OpenSSL::SSL::VERIFY_CLIENT_ONCE&quot;,
+                        ##                &quot;OpenSSL::SSL::VERIFY_FAIL_IF_NO_PEER_CERT&quot;</pre>
+</dd><dt>for proxy_authentication
+<dd>
+<p>The proxy authentication is a rare case, I think.  But it&#39;s possible.</p>
+
+<pre>label:
+  host:
+  port:
+  user:
+  password:
+  password_salt:       ## option.
+  password_pass_file:  ## option.
+  proxy_auth_user:
+  proxy_auth_token:
+  proxy_auth_rules:
+  cacert:              ## option for ssl.</pre>
+</dd></dl>
+
+<h2 id="class-YALTools::MainWrapper-label-Requirements+for+encryption-2Fdecryption+support.">Requirements for encryption/decryption support.<span><a href="#class-YALTools::MainWrapper-label-Requirements+for+encryption-2Fdecryption+support.">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><a href="MainWrapper.html">YALTools::MainWrapper</a> class supports the
+password encryption and decription. A master password file is essential for
+this function.</p>
+
+<p>The <a
+href="MainWrapper.html#method-i-set_master_pwfile">#set_master_pwfile</a>(filepath)
+method is prepared for your convenience.</p>
+
+<p>Instead of the <a
+href="MainWrapper.html#method-i-set_master_pwfile">#set_master_pwfile</a>()
+method, please use <code>password_pass_file</code> and
+<code>ssl_client_key_file_pass_file</code> config entries.</p>
+
+<h2 id="class-YALTools::MainWrapper-label-Examples">Examples<span><a href="#class-YALTools::MainWrapper-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<h3 id="class-YALTools::MainWrapper-label-Case+1.+Connect+directly+to+CouchDB.">Case 1. Connect directly to CouchDB.<span><a href="#class-YALTools::MainWrapper-label-Case+1.+Connect+directly+to+CouchDB.">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>case1.admin:
+   host: localhost
+   port: 5984
+   user: admin
+   password: xxxxxx</pre>
+
+<h3 id="class-YALTools::MainWrapper-label-Case+2.+Connect+directly+to+CouchDB-2C+but+password+is+encrypted.">Case 2. Connect directly to CouchDB, but password is encrypted.<span><a href="#class-YALTools::MainWrapper-label-Case+2.+Connect+directly+to+CouchDB-2C+but+password+is+encrypted.">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>case2.admin:
+  host: localhost
+  port: 5984
+  user: admin
+  password: d3a5a45f8c5e1ad0dd134a9c46e1c82f
+  password_salt: 3c31184f5193ef30</pre>
+
+<p>The password, xxxxxx, was encrypted by the salt and the master-password
+text;</p>
+
+<pre>{&quot;sec_text&quot;:&quot;f4fcf31194e12f3fbfefa3d1f5256e2cf19859f63f5cf2ab1e5778f85afa40f2&quot;}.</pre>
+
+<p>After saving the above line to the file like as &#39;sec_text.txt&#39;, the
+encrypted string can be decrypted;</p>
+
+<pre>$ utils/sbin/decpassword -m sec_text.txt -t d3a5a45f8c5e1ad0dd134a9c46e1c82f -s 3c31184f5193ef30
+xxxxxx</pre>
+
+<h3 id="class-YALTools::MainWrapper-label-Case+3.+Connect+to+CouchDB+via+Apache+working+as+a+ssl+web+proxy.">Case 3. Connect to CouchDB via Apache working as a ssl web proxy.<span><a href="#class-YALTools::MainWrapper-label-Case+3.+Connect+to+CouchDB+via+Apache+working+as+a+ssl+web+proxy.">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>In this case, apache is working as a proxy and listening on 443 port with
+the following setting;</p>
+
+<pre>&lt;IfModule mod_proxy.c&gt;
+      ProxyPass / http://127.0.0.1:5984/
+      ProxyPassReverse / http://127.0.0.1:5984/
+&lt;/IfModule&gt;
+
+case3.admin:
+  host: localhost
+  port: 443
+  user: admin
+  password: xxxxxx
+  cacert: /etc/ssl/certs/cacerts.pem</pre>
+
+<p>The user and password will be confirmed by the CouchDB.</p>
+
+<h3 id="class-YALTools::MainWrapper-label-Case+4.+Connect+to+CouchDB+via+stunnel.">Case 4. Connect to CouchDB via stunnel.<span><a href="#class-YALTools::MainWrapper-label-Case+4.+Connect+to+CouchDB+via+stunnel.">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre>admin.admin:
+  host: ssl.yasundial.org
+  port: 6984
+  user: admin
+  password: xxxxxx
+  cacert: /etc/ssl/certs/cacerts.pem
+  ssl_client_cert_file: /etc/ssl/certs/client.cert.pem
+  ssl_client_key_file: /etc/ssl/certs/client.key.pem
+  ssl_client_key_file_pass: xyxyxyxy
+  ssl_verify_mode: OpenSSL::SSL::VERIFY_PEER</pre>
+
+<h2 id="class-YALTools::MainWrapper-label-Exceptions">Exceptions<span><a href="#class-YALTools::MainWrapper-label-Exceptions">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<dl class="rdoc-list label-list"><dt><a href="LabelNotFoundError.html">YALTools::LabelNotFoundError</a>
+<dd>
+<p>causes from</p>
+<ul><li>
+<p>initialize</p>
+</li></ul>
+</dd></dl>
+
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-debug" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">debug</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(conf_file, label)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>If the label is not defined on the conf_file, it raises the exception, <a
+href="LabelNotFoundError.html">YALTools::LabelNotFoundError</a>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File yalt/mainwrapper.rb, line 152</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">conf_file</span>, <span class="ruby-identifier">label</span>)
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-ivar">@conf</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-identifier">conf_file</span>)
+  <span class="ruby-keyword">rescue</span>
+    <span class="ruby-ivar">@conf</span> = {}
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@label</span> = <span class="ruby-identifier">label</span>
+  <span class="ruby-ivar">@debug</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@master_pwfile</span> = <span class="ruby-string">&quot;&quot;</span>
+  
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">YALTools</span><span class="ruby-operator">::</span><span class="ruby-constant">LabelNotFoundError</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">not</span> <span class="ruby-ivar">@conf</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-ivar">@label</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-getCouch" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">getCouch</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns the instance of the <a href="Main.html">YALTools::Main</a> or nil
+if failed.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="getCouch-source">
+            <pre><span class="ruby-comment"># File yalt/mainwrapper.rb, line 179</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">getCouch</span>()
+  <span class="ruby-identifier">main</span> = <span class="ruby-keyword">nil</span>
+  
+  <span class="ruby-identifier">opts</span> = {}
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>].<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">case</span> <span class="ruby-identifier">l</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;ssl_client_cert_file&#39;</span>
+        <span class="ruby-identifier">opts</span>[<span class="ruby-string">&#39;ssl_client_cert&#39;</span>] = 
+          <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">X509</span><span class="ruby-operator">::</span><span class="ruby-constant">Certificate</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-identifier">l</span>]))
+        
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;ssl_client_key_file&#39;</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>].<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;ssl_client_key_file_pass&#39;</span>)
+          <span class="ruby-identifier">ssl_client_key_file_pass</span> = <span class="ruby-string">&quot;&quot;</span>              
+          <span class="ruby-keyword">if</span> <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>].<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;ssl_client_key_file_pass_salt&#39;</span>)
+            <span class="ruby-keyword">if</span> <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>].<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;ssl_client_key_file_pass_file&#39;</span>)
+               <span class="ruby-identifier">ssl_master_pwfile</span> = <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-string">&#39;ssl_client_key_file_pass_file&#39;</span>]
+            <span class="ruby-keyword">else</span>
+              <span class="ruby-identifier">ssl_master_pwfile</span> = <span class="ruby-ivar">@master_pwfile</span>
+            <span class="ruby-keyword">end</span>
+            <span class="ruby-identifier">ssl_client_key_file_pass</span> = <span class="ruby-constant">YALTools</span><span class="ruby-operator">::</span><span class="ruby-constant">Crypt</span><span class="ruby-operator">::</span><span class="ruby-identifier">decrypt_text</span>(<span class="ruby-identifier">ssl_master_pwfile</span>,
+                                                                    <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-string">&#39;ssl_client_key_file_pass_salt&#39;</span>], 
+                                                                    <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-string">&#39;ssl_client_key_file_pass&#39;</span>])
+          <span class="ruby-keyword">else</span>
+            <span class="ruby-identifier">ssl_client_key_file_pass</span> = <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-string">&#39;ssl_client_key_file_pass&#39;</span>]
+          <span class="ruby-keyword">end</span>
+          <span class="ruby-identifier">opts</span>[<span class="ruby-string">&#39;ssl_client_key&#39;</span>] = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-identifier">l</span>]),
+                                                          <span class="ruby-identifier">ssl_client_key_file_pass</span>)
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">opts</span>[<span class="ruby-string">&#39;ssl_client_key&#39;</span>] = <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">PKey</span><span class="ruby-operator">::</span><span class="ruby-constant">RSA</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-identifier">l</span>]))
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;ssl_verify_mode&#39;</span>
+        <span class="ruby-keyword">begin</span>
+          <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">l</span>] = <span class="ruby-identifier">eval</span>(<span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-identifier">l</span>])
+        <span class="ruby-keyword">rescue</span>
+          <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">l</span>] = <span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;password&#39;</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>].<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;password_salt&#39;</span>)
+          <span class="ruby-identifier">password_master_pwfile</span> = <span class="ruby-ivar">@master_pwfile</span>
+          <span class="ruby-identifier">password_master_pwfile</span> = <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-string">&#39;password_pass_file&#39;</span>] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>].<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">&#39;password_pass_file&#39;</span>)
+          <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">l</span>] = <span class="ruby-constant">YALTools</span><span class="ruby-operator">::</span><span class="ruby-constant">Crypt</span><span class="ruby-operator">::</span><span class="ruby-identifier">decrypt_text</span>(<span class="ruby-identifier">password_master_pwfile</span>,
+                                                 <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-string">&#39;password_salt&#39;</span>], <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-identifier">l</span>])
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">l</span>] = <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-identifier">l</span>]
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;host&#39;</span>,<span class="ruby-string">&#39;port&#39;</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;password_salt&#39;</span>,<span class="ruby-string">&#39;password_pass_file&#39;</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;ssl_client_key_file_pass&#39;</span>,<span class="ruby-string">&#39;ssl_client_key_file_pass_salt&#39;</span>,<span class="ruby-string">&#39;ssl_client_key_file_pass_file&#39;</span>
+        <span class="ruby-comment">## do nothing</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">l</span>] = <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-identifier">l</span>]
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-identifier">opts</span>[<span class="ruby-string">&quot;debug&quot;</span>] = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">debug</span>
+    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;opts: #{opts}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">debug</span>
+    
+    <span class="ruby-identifier">main</span> = <span class="ruby-constant">YALTools</span><span class="ruby-operator">::</span><span class="ruby-constant">Main</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Couch</span><span class="ruby-operator">::</span><span class="ruby-constant">Server</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-string">&quot;host&quot;</span>], <span class="ruby-ivar">@conf</span>[<span class="ruby-ivar">@label</span>][<span class="ruby-string">&quot;port&quot;</span>], <span class="ruby-identifier">opts</span>))
+    <span class="ruby-identifier">main</span>.<span class="ruby-identifier">debug</span> = <span class="ruby-identifier">debug</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">debug</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">main</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:debug</span>)
+  <span class="ruby-keyword">rescue</span>
+    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">$!</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">debug</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">checkCouchDBVersion</span>(<span class="ruby-identifier">main</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">main</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-set_master_pwfile" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_master_pwfile</span><span
+            class="method-args">(filepath)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>sets the master password filepath for encryption and decription.</p>
+
+<p>The file format of the master password file is ;</p>
+
+<pre class="ruby">{<span class="ruby-value">&quot;sec_text&quot;:</span><span class="ruby-string">&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>}
+</pre>
+
+<p>The value of “sec_text” must be string, but there is no limitation of its
+length.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="set_master_pwfile-source">
+            <pre><span class="ruby-comment"># File yalt/mainwrapper.rb, line 173</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_master_pwfile</span>(<span class="ruby-identifier">filepath</span>)
+  <span class="ruby-ivar">@master_pwfile</span> = <span class="ruby-identifier">filepath</span>
+  <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;[debug] set master_pwfile to #{filepath}.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

@@ -1,0 +1,125 @@
+<!-- -*- mode: markdown ; coding: utf-8 -*- -->
+
+<h1 id="enhancement-of-couchserver-class">Enhancement of Couch::Server Class</h1>
+
+<p>The original Couch::Server class is introduced at <a href="http://wiki.apache.org/couchdb/Getting_started_with_Ruby" title="Official CouchDB Wiki">Getting started with Ruby at Official CouchDB Wiki</a>.</p>
+
+<p>We provide some enhancements for the Couch::Server class as the following;</p>
+
+<ul>
+<li>Basic Authentication</li>
+<li>Digest Authentication for Apache Proxy</li>
+<li>SSL Client Authentication for Stunnel</li>
+<li>Proxy Authentication for proxy_authentification_handler</li>
+</ul>
+
+<p>Get()/put()/post()/delete() methods are same as the original methods.</p>
+
+<h2 id="basic-usage">Basic Usage</h2>
+
+<p>It uses third argument to pass options as follows.</p>
+
+<pre><code>opts = {}
+server = Couch::Server.new(&quot;localhost&quot;, &quot;5984&quot;, opts)
+</code></pre>
+
+<h3 id="basic-authentication">Basic Authentication</h3>
+
+<p>It supports following parameters.</p>
+
+<ul>
+<li>user</li>
+<li>password</li>
+</ul>
+
+<h4 id="example">Example</h4>
+
+<pre><code>opts = {}
+opts[&quot;user&quot;] = &quot;username&quot;
+opts[&quot;password&quot;] = &quot;xxxxxx&quot;
+server = Couch::Server.new(&quot;localhost&quot;, &quot;5984&quot;, opts)
+</code></pre>
+
+<p>The &quot;cacert&quot; parameter is also available for connecting to SSL port such as 6984 and 443.
+To use this feature, please refer the latter part of this document.</p>
+
+<h3 id="digest-authentication-bfor-apache-proxy">Digest Authentication bfor Apache Proxy</h3>
+
+<p>To use this feature, net-http-digest_auth module is essential.</p>
+
+<p>It supports following parameters.</p>
+
+<ul>
+<li>user</li>
+<li>password</li>
+<li>digest_auth</li>
+</ul>
+
+<h4 id="example-1">Example</h4>
+
+<pre><code>opts = {}
+opts[&quot;user&quot;] = &quot;username&quot;
+opts[&quot;password&quot;] = &quot;xxxxxx&quot;
+opts[&quot;digest_auth&quot;] = &quot;&quot;
+server = Couch::Server.new(&quot;localhost&quot;, &quot;80&quot;, opts)
+</code></pre>
+
+<p>The value of &quot;digest_auth&quot; is not evaluated.</p>
+
+<p>The &quot;cacert&quot; parameter is also available for connecting to SSL port such as 6984 and 443.
+To use this feature, please refer the latter part of this document.</p>
+
+<h3 id="ssl-client-authentication-for-stunnel">SSL Client Authentication for Stunnel</h3>
+
+<p>It supports following parameters.</p>
+
+<ul>
+<li>cacert - the filepath of the PEM file.</li>
+<li>ssl_verify_mode - (default: OpenSSL::SSL::VERIFY_PEER)</li>
+<li>ssl_verify_depth - (default: 5)</li>
+<li>ssl_client_cert - Instance of OpenSSL::X509::Certificate</li>
+<li>ssl_client_key - Instance of OpenSSL::PKey::RSA</li>
+</ul>
+
+<h4 id="example-2">Example</h4>
+
+<pre><code>opts['user'] = &quot;username&quot;
+opts['password'] = &quot;xxxxxx&quot;
+opts['cacert'] = &quot;/etc/ssl/certs/cacerts_and_server_certs.pem&quot;
+opts['ssl_client_cert'] = OpenSSL::X509::Certificate.new(File.new(&quot;/etc/ssl/certs/client.cert.pem&quot;))
+opts['ssl_client_key']  = OpenSSL::PKey::RSA.new(File.new(&quot;/etc/ssl/keys/client.key.pem&quot;))
+server = Couch::Server.new(&quot;couchdb.example.org&quot;, &quot;6984&quot;, opts)
+</code></pre>
+
+<p>The hostname of the first argument must be same as the common name (cn) of the server certificate.</p>
+
+<p>This feature is depending on the standard ruby libraries.
+Please refer the following documents.</p>
+
+<ul>
+<li><a href="http://www.ruby-doc.org/stdlib/libdoc/openssl/rdoc/index.html" title="OpenSSL">library openssl</a></li>
+<li><a href="http://www.ruby-doc.org/stdlib/libdoc/net/http/rdoc/index.html" title="Net::HTTP">library net/http</a></li>
+</ul>
+
+<h3 id="proxy-authentication-for-proxyauthentificationhandler">Proxy Authentication for proxy_authentification_handler</h3>
+
+<p>It supports following parameters.</p>
+
+<ul>
+<li>proxy_auth_user (=&gt; X-Auth-CouchDB-UserName)</li>
+<li>proxy_auth_roles (=&gt; X-Auth-CouchDB-Roles)</li>
+<li>proxy_auth_token (=&gt; X-Auth-CouchDB-Token)</li>
+</ul>
+
+<h2 id="practical-example--basicdigest-authentication-over-ssl">Practical example - Basic/Digest Authentication over SSL</h2>
+
+<p>The &quot;cacert&quot; parameter provides the SSL support.</p>
+
+<p>The &quot;cacerts&quot; must contains the both certificate of CA and the web server.</p>
+
+<pre><code>opts = {}
+opts[&quot;user&quot;] = &quot;*username*&quot;
+opts[&quot;password&quot;] = &quot;xxxx&quot;
+opts[&quot;cacert&quot;] = &quot;/etc/ssl/certs/cacerts_and_server_certs.pem&quot;
+server = Couch::Server.new(&quot;localhost&quot;, &quot;443&quot;, opts)
+</code></pre>

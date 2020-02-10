@@ -1,0 +1,129 @@
+<!-- -*- mode: markdown ; coding: utf-8 -*- -->
+
+<h1 id="enhancement-of-couchserver-class">Enhancement of Couch::Server Class</h1>
+
+<p>オリジナルのCouch::Serverクラスは<a href="http://wiki.apache.org/couchdb/Getting_started_with_Ruby" title="Official CouchDB Wiki">Getting started with Ruby at Official CouchDB Wiki</a>に掲載されています。</p>
+
+<p>このクラスでは以下の認証方式をサポートする拡張を行なっています。</p>
+
+<ul>
+<li>Basic認証</li>
+<li>Digest認証 for Apache Proxy</li>
+<li>SSLクライアント認証 for Stunnel</li>
+<li>Proxy認証 for proxy_authentification_handler</li>
+</ul>
+
+<p>get/put/post/deleteのメソッドの挙動はオリジナルと同じです。</p>
+
+<h2 id="基本的な使い方">基本的な使い方</h2>
+
+<p>オリジナルで準備されている第三引数を利用して、拡張を行なっています。</p>
+
+<pre><code>opts = {}
+server = Couch::Server.new(&quot;localhost&quot;, &quot;5984&quot;, opts)
+</code></pre>
+
+<p>各認証方式でサポートしているオプションについて解説していきます。</p>
+
+<h3 id="basic認証">Basic認証</h3>
+
+<p>以下のパラメータをサポートします。</p>
+
+<ul>
+<li>user</li>
+<li>password</li>
+</ul>
+
+<h4 id="具体例">具体例</h4>
+
+<pre><code>opts = {}
+opts[&quot;user&quot;] = &quot;username&quot;
+opts[&quot;password&quot;] = &quot;xxxxxx&quot;
+server = Couch::Server.new(&quot;localhost&quot;, &quot;5984&quot;, opts)
+</code></pre>
+
+<p>SSL(6984port, 443port, etc.)を使用するためには cacert オプションを利用します。
+詳細は後半の説明を参照してください。</p>
+
+<h3 id="digest認証-for-apache-proxy">Digest認証 for Apache Proxy</h3>
+
+<p>rubyのnet-http-digest_authモジュールが必要です。</p>
+
+<p>次のパラメータをサポートします。</p>
+
+<ul>
+<li>user</li>
+<li>password</li>
+<li>digest_auth</li>
+</ul>
+
+<h4 id="具体例-1">具体例</h4>
+
+<pre><code>opts = {}
+opts[&quot;user&quot;] = &quot;username&quot;
+opts[&quot;password&quot;] = &quot;xxxxxx&quot;
+opts[&quot;digest_auth&quot;] = &quot;&quot;
+server = Couch::Server.new(&quot;localhost&quot;, &quot;80&quot;, opts)
+</code></pre>
+
+<p>値には無関係に&quot;digest_auth&quot;が設定されていれば有効になります。</p>
+
+<p>SSL(6984port, 443port, etc.)を使用するためには cacert オプションを利用します。
+詳細は後半の説明を参照してください。</p>
+
+<h3 id="sslクライアント認証-for-stunnel">SSLクライアント認証 for Stunnel</h3>
+
+<p>次のパラメータをサポートします。</p>
+
+<ul>
+<li>cacert PEM形式ファイルへのパスを指定</li>
+<li>ssl_verify_mode (default: OpenSSL::SSL::VERIFY_PEER)</li>
+<li>ssl_verify_depth (default: 5)</li>
+<li>ssl_client_cert OpenSSL::X509::Certificateのインスタンス</li>
+<li>ssl_client_key OpenSSL::PKey::RSAのインスタンス</li>
+</ul>
+
+<h4 id="具体例-2">具体例</h4>
+
+<pre><code>opts['user'] = &quot;username&quot;
+opts['password'] = &quot;xxxxxx&quot;
+opts['cacert'] = &quot;/etc/ssl/certs/cacerts_and_server_certs.pem&quot;
+opts['ssl_client_cert'] = OpenSSL::X509::Certificate.new(File.new(&quot;/etc/ssl/certs/client.cert.pem&quot;))
+opts['ssl_client_key']  = OpenSSL::PKey::RSA.new(File.new(&quot;/etc/ssl/keys/client.key.pem&quot;))
+server = Couch::Server.new(&quot;couchdb.example.org&quot;, &quot;6984&quot;, opts)
+</code></pre>
+
+<p>ホスト名はServer CertificateのCommon Name (CN)と同じである必要があります。</p>
+
+<p>ruby標準のopenssl, net/httpsライブラリに依存しています。
+詳細は各ドキュメントを参照してください。</p>
+
+<ul>
+<li><a href="http://doc.okkez.net/static/192/library/net=2fhttps.html" title="Net::HTTPSドキュメント">library net/https for ruby 1.9.2 @doc.okkez.net</a></li>
+<li><a href="http://doc.okkez.net/static/192/library/openssl.html" title="OpenSSLドキュメント">library openssl for ruby 1.9.2 @doc.okkez.net</a></li>
+</ul>
+
+<h3 id="proxy認証-for-proxyauthentificationhandler">Proxy認証 for proxy_authentification_handler</h3>
+
+<p>次のパラメータをサポートします。</p>
+
+<ul>
+<li>proxy_auth_user (=&gt; X-Auth-CouchDB-UserName)</li>
+<li>proxy_auth_roles (=&gt; X-Auth-CouchDB-Roles)</li>
+<li>proxy_auth_token (=&gt; X-Auth-CouchDB-Token)</li>
+</ul>
+
+<p>パラメータが指定されていた場合に、対応するヘッダに値がセットされます。</p>
+
+<h2 id="応用編---sslを利用したbasic認証">応用編  - SSLを利用したBasic認証</h2>
+
+<p>cacertを指定する事で、Basic認証やDigest認証でSSLポートを利用する事も可能です。</p>
+
+<pre><code>opts = {}
+opts[&quot;user&quot;] = &quot;*username*&quot;
+opts[&quot;password&quot;] = &quot;xxxx&quot;
+opts[&quot;cacert&quot;] = &quot;/etc/ssl/certs/cacerts_and_server_certs.pem&quot;
+server = Couch::Server.new(&quot;localhost&quot;, &quot;443&quot;, opts)
+</code></pre>
+
+<p>以上</p>
