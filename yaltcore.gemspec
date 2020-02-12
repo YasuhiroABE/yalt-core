@@ -7,7 +7,9 @@ Gem::Specification.new do |s|
   s.description = "The core library of yaltools."
   s.authors     = ["Yasuhiro ABE"]
   s.email       = 'yasu@yasundial.org'
-  s.files       = ["lib/yalt.rb"]
+  s.files       = ["README.md"  "yaltcore.gemspec"]
+  s.files       += Dir.glob("lib/yalt.rb")
+  s.files       += Dir.glob("lib/**/*.rb")
   s.homepage    = 'http://lscouchdb.sourceforge.net/'
   s.metadata    = { "source_code_uri" => "https://github.com/YasuhiroABE/yalt-core" }
 end
