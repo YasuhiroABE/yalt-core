@@ -29,7 +29,6 @@ module YALTools
   require "json"
   require "uri"
   require "yaml"
-  require "couchdb"
 
   require "yalt/exceptions"
   require "yalt/main"
@@ -40,5 +39,6 @@ module YALTools
   require "yalt/jsonrows"
   require "yalt/formatter"
   require "yalt/yaview"
+  require "yalt/couchdb"
 end
 

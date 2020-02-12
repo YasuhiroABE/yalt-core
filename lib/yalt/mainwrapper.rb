@@ -235,7 +235,7 @@ module YALTools
         opts["debug"] = true if debug
         $stderr.puts "opts: #{opts}" if debug
         
-        main = YALTools::Main.new(Couch::Server.new(@conf[@label]["host"], @conf[@label]["port"], opts))
+        main = YALTools::Main.new(YALTools::Server.new(@conf[@label]["host"], @conf[@label]["port"], opts))
         main.debug = debug if debug and main.respond_to?(:debug)
       rescue
         $stderr.puts $! if debug

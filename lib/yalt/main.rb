@@ -4,13 +4,13 @@ module YALTools
 
   # == Description
   #
-  # YALTools::Main class is a wrapper class for the Couch::Server class which is described at the official CouchDB wiki.
+  # YALTools::Main class is a wrapper class for the YALTools::Server or Couch::Server class described at the official CouchDB wiki.
   #
   # It aims to handle errors.
   #
   # == Usage
   #
-  #   @couch = Main.new(Couch::Server.new(host,port))
+  #   @couch = Main.new(YALTools::Server.new(host,port))
   #   json = @couch.get("/example/_design/all/_view/all?reduce=false")
   #
   
