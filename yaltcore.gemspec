@@ -1,7 +1,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'yalt-core'
-  s.version     = '0.1.0'
+  s.version     = '0.1.1'
   s.licenses    = ['Apache2.0']
   s.summary     = "Testing"
   s.description = "The core library of yaltools."
